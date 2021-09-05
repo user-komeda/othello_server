@@ -5,8 +5,11 @@ function othelloServer (server) {
       origin: '*'
     }
   })
-  sio.on('connection', function (socket) {
-    console.log('connection')
+  sio.on('connection', socket => {
+    socket.on('join-room', roomValue => {
+      const roomName = roomValue.roomName
+      socket.join(roomName)
+    })
   })
 }
 module.exports = othelloServer
