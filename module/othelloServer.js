@@ -3,14 +3,11 @@ const REDIS_HOST = '0.0.0.0'
 
 const redis = require('redis')
 const redisClient = redis.createClient(REDIS_PORT, REDIS_HOST)
-redisClient.on('connect', () => {
-  console.log('truetype')
-})
-redisClient.on('error', err => {
-  console.log(err)
-})
 
 const socketio = require('socket.io')
+
+const startGameF = false
+
 function othelloServer (server) {
   const sio = socketio(server, {
     cors: {
@@ -18,15 +15,16 @@ function othelloServer (server) {
     }
   })
   sio.on('connection', socket => {
-    socket.on('join-room', roomValue => {
+    socket.once('join-room', roomValue => {
       const roomName = roomValue.roomName
       const playerName = roomValue.playerName
-      console.log(roomName)
-      console.log(playerName)
+
       socket.join(roomName)
       const roomSize = socket.adapter.rooms.get(roomName).size
+
       if (roomSize === 1) {
-        console.log('wait')
+        console.log('room1')
+
         const roomObject = {}
         roomObject.playerName = playerName
         roomObject.turn = 0
@@ -36,19 +34,18 @@ function othelloServer (server) {
           blackIsNext: false
         })
       } else if (roomSize === 2) {
-        console.log('start')
+        console.log('room2')
         socket.to(roomName).emit('change-mode', {
           mode: 'start',
           blackIsNext: true
         })
       } else {
-        console.log('leave')
-        socket.to(roomName).emit('over-notice')
-        socket.leaveAll()
-        console.log(socket.adapter.rooms.get(roomName).size)
+        console.log(socket.id)
+        socket.emit('over-notice')
       }
     })
     socket.on('put-piece', value => {
+      console.log('over')
       socket.to(roomName).emit('update-piece', {})
     })
   })
