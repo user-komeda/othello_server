@@ -2,24 +2,49 @@
   "name": "othello-server",
   "version": "0.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node bin/www",
+    "lint": "eslint . --ext .js --config .eslintrc.json --fix",
+    "format": "prettier --write module/*.js"
   },
   "dependencies": {
     "cookie-parser": "~1.4.4",
-    "debug": "~2.6.9",
-    "express": "~4.16.1",
-    "http-errors": "~1.6.3",
+    "debug": "~4.3.4",
+    "express": "^4.17.3",
+    "http-errors": "~2.0.0",
     "jade": "~1.11.0",
-    "morgan": "~1.9.1",
-    "redis": "^3.1.2",
+    "morgan": "~1.10.0",
+    "redis": "^4.0.4",
     "socket.io": "^4.2.0",
-    "tsd": "^0.17.0",
+    "tsd": "^0.19.1",
     "typings": "^2.1.1"
   },
   "devDependencies": {
     "@types/express": "^4.17.13",
-    "@types/node": "^16.9.1",
-    "@types/socket.io": "^3.0.2"
+    "@types/node": "^17.0.22",
+    "@types/socket.io": "^3.0.2",
+    "eslint": "^8.11.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-jsdoc": "^38.0.4",
+    "eslint-plugin-react": "^7.29.4",
+    "eslint-plugin-unicorn": "^41.0.0",
+    "husky": "^7.0.4",
+    "jsdoc": "^3.6.10",
+    "lint-staged": "^12.3.5",
+    "prettier": "^2.5.1",
+    "stylelint": "^14.5.3",
+    "stylelint-config-prettier": "^9.0.3",
+    "stylelint-config-recess-order": "^3.0.0",
+    "stylelint-config-standard": "^25.0.0",
+    "stylelint-declaration-block-no-ignored-properties": "^2.5.0",
+    "stylelint-prettier": "^2.0.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "yarn format --write",
+      "yarn lint"
+    ]
   }
 }

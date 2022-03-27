@@ -1,20 +1,21 @@
-var express = require('express')
-var router = express.Router()
-const util = require('util')
-
-const redis = require('redis')
+/* eslint-disable new-cap */
+import express from 'express'
+import util from 'util'
+import redis from 'redis'
+const router = express.Router()
 const REDIS_PORT = 6379
 const REDIS_HOST = '0.0.0.0'
 
+// redis設定
 const redisClient = redis.createClient(REDIS_PORT, REDIS_HOST)
 redisClient.on('connect', () => {})
-redisClient.on('error', err => {
+redisClient.on('error', (err) => {
   console.log(err)
 })
 
-/* GET users listing. */
+// topPage
 router.get('/', function (req, res, next) {
-  get().then(data => {
+  get().then((data) => {
     if (data) {
       res.send(JSON.stringify(Object.fromEntries(data)))
     } else {
@@ -23,6 +24,7 @@ router.get('/', function (req, res, next) {
   })
 })
 
+// 部屋情報取得
 const get = async () => {
   redisClient.keys = util.promisify(redisClient.keys)
   redisClient.get = util.promisify(redisClient.get)
@@ -41,4 +43,4 @@ const get = async () => {
   }
 }
 
-module.exports = router
+export default router

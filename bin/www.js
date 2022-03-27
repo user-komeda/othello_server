@@ -1,16 +1,15 @@
-#!/usr/bin/env node
-
 /**
  * Module dependencies.
  */
-const express = require('express')
+import express from 'express'
 
 const app = express()
-const debug = require('debug')('othello-server:server')
-const http = require('http')
-const othelloServer = require('../module/othelloServer.js')
-const roomInfo = require('../module/roomInfo.js')
-const cors = require('cors')
+import http from 'http'
+import othelloServer from '../module/othelloServer.js'
+import roomInfo from '../module/roomInfo.js'
+import cors from 'cors'
+import Debug from 'debug'
+const debug = Debug('othello-server:server')
 
 /**
  * Get port from environment and store in Express.
@@ -42,7 +41,7 @@ othelloServer(server)
  * Normalize a port into a number, string, or false.
  */
 
-function normalizePort (val) {
+function normalizePort(val) {
   var port = parseInt(val, 10)
 
   if (isNaN(port)) {
@@ -62,7 +61,7 @@ function normalizePort (val) {
  * Event listener for HTTP server "error" event.
  */
 
-function onError (error) {
+function onError(error) {
   if (error.syscall !== 'listen') {
     throw error
   }
@@ -88,8 +87,9 @@ function onError (error) {
  * Event listener for HTTP server "listening" event.
  */
 
-function onListening () {
+function onListening() {
   var addr = server.address()
   var bind = typeof addr === 'string' ? 'pipe ' + addr : 'port ' + addr.port
   debug('Listening on ' + bind)
+  console.log('listening on ' + bind)
 }
