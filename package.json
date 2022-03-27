@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node bin/www",
-    "lint": "eslint . --ext .js --config .eslintrc.json",
-    "style-lint": "stylelint src/*.css",
+    "lint": "eslint . --ext .js --config .eslintrc.json --fix",
     "format": "prettier --write module/*.js"
   },
   "dependencies": {
@@ -44,11 +43,8 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "yarn lint",
-      "yarn format --write"
-    ],
-    "*.{css,less,sass,scss}": [
-      "yarn style-lint"
+      "yarn format --write",
+      "yarn lint"
     ]
   }
 }

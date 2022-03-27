@@ -7,7 +7,7 @@ const redisClient = redis.createClient(REDIS_PORT, REDIS_HOST)
 
 /**
  *
- * @param server
+ * @param server server
  */
 const othelloServer = (server) => {
   const sio = new Server(server, {

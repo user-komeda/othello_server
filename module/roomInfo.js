@@ -1,19 +1,19 @@
+/* eslint-disable new-cap */
 import express from 'express'
 import util from 'util'
 import redis from 'redis'
-
-// eslint-disable-next-line new-cap
 const router = express.Router()
 const REDIS_PORT = 6379
 const REDIS_HOST = '0.0.0.0'
 
+// redis設定
 const redisClient = redis.createClient(REDIS_PORT, REDIS_HOST)
 redisClient.on('connect', () => {})
 redisClient.on('error', (err) => {
   console.log(err)
 })
 
-/* GET users listing. */
+// topPage
 router.get('/', function (req, res, next) {
   get().then((data) => {
     if (data) {
@@ -24,6 +24,7 @@ router.get('/', function (req, res, next) {
   })
 })
 
+// 部屋情報取得
 const get = async () => {
   redisClient.keys = util.promisify(redisClient.keys)
   redisClient.get = util.promisify(redisClient.get)
