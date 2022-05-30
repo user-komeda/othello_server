@@ -1,46 +1,33 @@
 /* eslint-disable new-cap */
 import express from 'express'
-import util from 'util'
-import redis from 'redis'
-const router = express.Router()
-const REDIS_PORT = 6379
-const REDIS_HOST = '0.0.0.0'
+import { selectMongoDb, getDb } from '../util/mongoDbUtil.js'
 
-// redis設定
-const redisClient = redis.createClient(REDIS_PORT, REDIS_HOST)
-redisClient.on('connect', () => {})
-redisClient.on('error', (err) => {
-  console.log(err)
-})
+const router = express.Router()
 
 // topPage
 router.get('/', function (req, res, next) {
-  get().then((data) => {
-    if (data) {
-      res.send(JSON.stringify(Object.fromEntries(data)))
-    } else {
-      res.send(null)
-    }
-  })
+  const dbConnection = getDb()
+  get(dbConnection)
+    .then((data) => {
+      if (data) {
+        console.dir(JSON.stringify(Object.fromEntries(data)))
+        res.send(data)
+      } else {
+        res.send(null)
+      }
+    })
+    .catch((err) => {
+      throw err
+    })
 })
 
 // 部屋情報取得
-const get = async () => {
-  redisClient.keys = util.promisify(redisClient.keys)
-  redisClient.get = util.promisify(redisClient.get)
-
-  const keyList = await redisClient.keys('*')
-  if (keyList.length !== 0) {
-    const map = new Map()
-    for (const key of keyList) {
-      const value = await redisClient.get(key)
-      map.set(key, value)
-    }
-
-    return map
-  } else {
-    return null
-  }
+const get = async (dbConnection) => {
+  const result = selectMongoDb(dbConnection).then((data) => {
+    console.log(data)
+    return data
+  })
+  return result
 }
 
 export default router

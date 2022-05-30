@@ -14,8 +14,9 @@
     "express": "^4.17.3",
     "http-errors": "~2.0.0",
     "jade": "~1.11.0",
+    "mongodb": "^4.6.0",
     "morgan": "~1.10.0",
-    "redis": "^4.0.4",
+    "redis": "^4.1.0",
     "socket.io": "^4.2.0",
     "tsd": "^0.19.1",
     "typings": "^2.1.1"

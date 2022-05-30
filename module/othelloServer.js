@@ -1,15 +1,14 @@
-import redis from 'redis'
 import { Server } from 'socket.io'
-
-const REDIS_PORT = 6379
-const REDIS_HOST = '0.0.0.0'
-const redisClient = redis.createClient(REDIS_PORT, REDIS_HOST)
+import { insertMongoDb, getDb } from '../util/mongoDbUtil.js'
 
 /**
  *
  * @param server server
+ * @param db db
  */
-const othelloServer = (server) => {
+const othelloServer = (server, db) => {
+  const dbConnection = getDb()
+
   const sio = new Server(server, {
     cors: {
       origin: 'http://localhost:3000',
@@ -27,11 +26,12 @@ const othelloServer = (server) => {
       console.log(socket.id)
       if (roomSize === 1) {
         console.log('room1')
-
         const roomObject = {}
         roomObject.playerName = playerName
         roomObject.turn = 0
-        redisClient.set(roomName, JSON.stringify(roomObject))
+        roomObject.roomName = roomName
+        const obj = { roomObject: roomObject }
+        insertMongoDb(dbConnection, obj)
         socket.emit('change-mode', {
           mode: 'wait',
           blackIsNext: false,
@@ -55,4 +55,16 @@ const othelloServer = (server) => {
     // })
   })
 }
+
+// const insertMongoDb = (db, obj) => {
+//   const dbo = db.db('othello')
+//   // ----------------------------------------------------------------------
+//   // INSERT
+//   // ----------------------------------------------------------------------
+//   dbo.collection('othello').insertOne(obj, function (err, res) {
+//     if (err) throw err
+//     db.close()
+//   })
+// }
+
 export default othelloServer
