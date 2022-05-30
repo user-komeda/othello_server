@@ -10,6 +10,7 @@ import roomInfo from '../module/roomInfo.js'
 import cors from 'cors'
 import Debug from 'debug'
 const debug = Debug('othello-server:server')
+import { dbConnect, getDb } from '../util/mongoDbUtil.js'
 
 /**
  * Get port from environment and store in Express.
@@ -28,14 +29,23 @@ app.use('/', roomInfo)
 
 const server = http.createServer(app)
 
+// const REDIS_PORT = 6379
+// const REDIS_HOST = '0.0.0.0'
+
+await dbConnect()
+  .then((data) => {
+    server.listen(port)
+    server.on('error', onError)
+    server.on('listening', onListening)
+    othelloServer(server)
+  })
+  .catch((err) => {
+    throw err
+  })
+
 /**
  * Listen on provided port, on all network interfaces.
  */
-
-server.listen(port)
-server.on('error', onError)
-server.on('listening', onListening)
-othelloServer(server)
 
 /**
  * Normalize a port into a number, string, or false.
